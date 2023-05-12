@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de link do WhatsApp</title>
+
+    <style>
+        html{
+            font-family: Helvetica, sans-serif;
+        }
+        .comandos{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin: 0 auto;
+            width: 400px;
+        }
+        #texto, #numero{
+            width: 98%;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+        button{
+            width: 100%;
+            height: 35px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            background-color: black;
+        }
+        .areadoresultado{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin: 20px auto;
+            padding: 20px;
+            width: 340px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+        }
+        .resultado{
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <section class="comandos">
+        <h1>Gerador de link do WhatsApp</h1>
+        <form method="post" action="" onsubmit="gerarlink(event)">
+            <input type="number" id="numero" required>
+            <input type="text" id="texto">
+            <button type="submit">Gerar Link</button>
+        </form>
+    </section>
+
+    <div class="areadoresultado" id="areadoresultado">
+        <div class="resultado" id="resultado"></div>
+        <button id="copiar">Copiar Link</button>
+    </div>
+    
+    
+    <script>
+        //variaveis capturar texto e area do resultado
+        let numero = document.querySelector("#numero").value;
+        let texto = document.querySelector("#texto").value;
+        let resultado = document.querySelector("#resultado");
+
+        //variaveis para resultado
+        let link;
+
+        //variavel para copiar link
+        let botaoCopiar = document.querySelector("#copiar");
+
+        function gerarlink(event){
+            event.preventDefault();
+
+            numero = document.querySelector("#numero").value;
+            texto = document.querySelector("#texto").value;
+            console.log(texto);
+
+            //validar
+            if (numero.toString().length != 11) {
+                alert('O número precisa ter 11 dígitos, no formato ddd do estado + número.');
+                return;
+            }
+            if(texto.toString().length != 0){
+                texto = "?text="+encodeURI(texto.trim().replace(/[\s]/g, '+'));
+            }
+
+            //formar link
+            link = "https://wa.me/55"+numero+texto;
+
+            //mostrar resultado
+            resultado.innerText = "";
+            resultado.insertAdjacentHTML("afterBegin", link);
+        }
+
+        botaoCopiar.addEventListener('click', () => {
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link copiado para a área de transferência!');
+            }, error => {
+                console.error(error);
+                alert('Erro ao copiar o link.');
+            });
+        });
+
+        resultado.insertAdjacentHTML("afterBegin", "Link aqui");
+    </script>
+
+</body>
+</html>
